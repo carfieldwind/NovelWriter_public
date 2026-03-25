@@ -40,10 +40,11 @@ COPY . .
 # 复制前端构建产物
 COPY --from=frontend-builder /app/frontend/dist /app/frontend/dist
 
-# 创建数据目录和默认数据文件
-RUN mkdir -p /app/output /app/styles /app/prompts
-RUN echo '{"projects":{},"active_project":""}' > /app/projects.json
-RUN echo '[]' > /app/xp_presets.json
+# 创建数据目录和默认数据文件（rm -rf 防止旧版挂载残留的同名目录）
+RUN mkdir -p /app/output /app/styles /app/prompts \
+    && rm -rf /app/projects.json /app/xp_presets.json \
+    && echo '{"projects":{},"active_project":""}' > /app/projects.json \
+    && echo '[]' > /app/xp_presets.json
 
 EXPOSE 7860
 
